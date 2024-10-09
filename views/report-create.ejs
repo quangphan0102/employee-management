@@ -1,0 +1,88 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="project-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Report Creating
+      </p>
+
+      <form
+        class="project_form rounded-3 bg-white p-3"
+        action="/reports/create?userId=<%=user.id%>"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="mb-3 me-3">
+          <label for="report-title" class="form-label fw-bold"
+            >Report title:</label
+          >
+          <input
+            type="type"
+            class="form-control"
+            id="report-title"
+            name="report_title"
+            placeholder="Type your name..."
+          />
+        </div>
+        <div class="mb-3">
+          <label for="report-title" class="form-label fw-bold"
+            >Report description:</label
+          >
+          <textarea
+            class="form-control"
+            name="report_description"
+            id="report_description"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="report-file" class="form-label fw-bold d-block"
+            >Report file:</label
+          >
+          <input
+            type="file"
+            class="form-control d-inline-block"
+            id="report-file"
+            name="report_file"
+          />
+        </div>
+        <button class="btn btn-primary fw-bold mt-3" type="submit">
+          Create
+        </button>
+      </form>
+
+      <p class="report_heading fw-bold text-primary fs-4 mt-3">
+        Report that sended
+      </p>
+
+      <div
+        class="report-list d-flex flex-wrap justify-content-between bg-light mt-3 rounded-3"
+      >
+        <% reports.forEach(report => { %>
+        <div class="report-item bg-white m-3 p-4 rounded-3">
+          <p class="report-title fw-bold"><%= report.report_title %></p>
+          <p class="file-name">
+            <%= report.report_file_name.substring(0,15) + "..." %>
+          </p>
+          <p class="report-send"><%= report.create_day %></p>
+          <div class="d-flex justify-content-end align-items-center">
+            <a
+              href="/reports/delete?reportId=<%= report.id %>"
+              class="text-end report-link link-underline-light text-danger"
+              >Delete</a
+            >
+            <a
+              href="/reports/view?reportId=<%= report.id %>"
+              class="btn btn-primary ms-2"
+              >View</a
+            >
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,169 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="account-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Account details
+      </p>
+
+      <div class="account__container container-fluid bg-white rounded-3 p-3">
+        <div class="row gx-3">
+          <div class="col-12 col-md-6 col-lg-2">
+            <div class="user-image__ctn">
+              <% if (avartar != null) { %>
+                <img
+                  src="data:image/png;base64,<%= avartar %>"
+                  alt=""
+                  style="width: 100%"
+                  class="rounded-3"
+                />
+              <% } %>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-10">
+            <% if (locals.errorMessage) { %>
+              <p class="fw-bold text-danger"></p>
+                Your old password is not correct
+              </p>
+            <% } if (locals.successMessage) { %>
+              <p class="fw-bold text-success">
+                You has been change the password successfully
+              </p>
+            <% } %>
+            <div class="account__info-ctn">
+              <div class="mb-3">
+                <p class="account-text fs-6">Fullname:</p>
+                <span class="fs-5 fw-bold"><%= user.fname %></span>
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Role:</p>
+                <span class="fs-5 fw-bold"><%= user.role %></span>
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Department:</p>
+                <span class="fs-5 fw-bold"
+                  ><%= department.department_name %></span
+                >
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Birthday:</p>
+                <span class="fs-5 fw-bold"><%= user.year %></span>
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Email:</p>
+                <span class="fs-5 fw-bold"><%= user.email %></span>
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Phone:</p>
+                <span class="fs-5 fw-bold"><%= user.phone %></span>
+              </div>
+              <div class="mb-3">
+                <p class="account-text fs-6">Username:</p>
+                <span class="fs-5 fw-bold"><%= user.username %></span>
+              </div>
+              <p class="fs-6">Password:</p>
+              <span class="fw-bold fs-5">•••••••••</span>
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#user_password-modal"
+                class="user__change-password-btn btn btn-light mt-1 mt-lg-0"
+              >
+                Change your password
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="user_password-modal"
+  tabindex="-1"
+  aria-labelledby="user_password-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="user_password-modal">
+          Change password
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          class="user__change-password-form"
+          action="/details/change-password?id=<%= user.id %>"
+          method="post"
+          class="request-leave__form"
+        >
+          <div class="mb-3">
+            <label for="old-password" class="w-50 fw-bold"
+              >Your old password:</label
+            >
+            <input type="password" id="old-password" name="old_password" />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="w-50 fw-bold">Password:</label>
+            <input type="password" id="password" name="password" />
+          </div>
+          <div class="mb-3">
+            <label for="re-password" class="w-50 fw-bold">Re-Password:</label>
+            <input type="password" id="re-password" name="re_password" />
+          </div>
+
+          <span class="message__output fw-bold text-danger"></span>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="submit-change__btn btn btn-danger">
+          Change
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const accountChangeBtn = document.querySelector(".user__change-password-btn");
+  const passwordChangeForm = document.querySelector(
+    ".user__change-password-form"
+  );
+  const reqChangeBtn = document.querySelector(".submit-change__btn");
+
+  const passwordInput = document.getElementById("password");
+  const rePasswordInput = document.getElementById("re-password");
+
+  const messageOutput = document.querySelector(".message__output");
+
+  rePasswordInput.onclick = () => {
+    rePasswordInput.value = null;
+    messageOutput.innerHTML = null;
+  };
+
+  reqChangeBtn.addEventListener("click", () => {
+    if (passwordInput.value !== rePasswordInput.value || passwordInput === "") {
+      messageOutput.innerHTML = "The re-password is not correct!";
+
+      rePasswordInput.focus();
+    } else {
+      passwordChangeForm.submit();
+    }
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,138 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <p class="task-form__heading fw-bold fs-4 mb-0 text-primary">
+          Request leaves list
+        </p>
+      </div>
+
+      <div class="bg-white rounded-3">
+        <div class="task-ctn bg-white rounded-3 p-3">
+          <table class="leave-table table">
+            <thead>
+              <tr>
+                <th scope="col">Number</th>
+                <th scope="col">From Employee</th>
+                <th scope="col">Leave date</th>
+                <th scope="col">Reason</th>
+                <th scope="col">Request</th>
+                <% if (user.role === "CEO" || user.role === "ADMIN") { %>
+                <th scope="col">Approve</th>
+                <% } %>
+              </tr>
+            </thead>
+            <tbody>
+              <% leaves.forEach((leave, index) => { %>
+              <tr>
+                <td data-title="Id">
+                  <p class="leave-id fw-bold mb-0 mt-2"><%= index + 1 %></p>
+                </td>
+                <td data-title="Full name">
+                  <p class="employee-name fw-bold mb-0 mt-2">
+                    <%= leave.fname %>
+                  </p>
+                </td>
+                <td data-title="Date leave">
+                  <p class="leave-date mb-0 mt-2"><%= leave.date %></p>
+                </td>
+                <td data-title="Reason">
+                  <p class="leave-reason mb-0 mt-2">
+                    <%= leave.leave_reason %>
+                  </p>
+                </td>
+                <td class="content-none">
+                  <% if (leave.leave_accept === null) { %>
+                  <p
+                    class="leave-request fw-bold mb-0 p-2 bg-warning text-white rounded-3 text-center"
+                  >
+                    Requesting
+                  </p>
+                  <% } else if (leave.leave_accept === false) { %>
+                  <p
+                    class="leave-request fw-bold mb-0 p-2 bg-danger text-white rounded-3 text-center"
+                  >
+                    Decline
+                  </p>
+                  <%} else { %>
+                  <p
+                    class="leave-request fw-bold mb-0 p-2 bg-success text-white rounded-3 text-center"
+                  >
+                    Approved
+                  </p>
+                  <% }%>
+                </td>
+                <% if (user.role === "CEO" || user.role === "ADMIN") { %>
+                <td
+                  class="request-leave__btns d-flex align-items-center"
+                  data-title="Others"
+                >
+                  <div class="request__btns-form">
+                    <% if (leave.leave_accept === null) { %>
+                    <form
+                      action="/request-leave/approve/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-success me-2">
+                        <i class="fa-solid fa-check"></i>
+                      </button>
+                    </form>
+                    <form
+                      action="/request-leave/decline/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-danger">
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </form>
+                    <% } else if (leave.leave_accept === false){ %>
+                    <form
+                      action="/request-leave/approve/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-success me-2">
+                        <i class="fa-solid fa-check"></i>
+                      </button>
+                    </form>
+                    <form
+                      action="/request-leave/decline/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-danger" disabled>
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </form>
+                    <% } else { %>
+                    <form
+                      action="/request-leave/approve/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-success me-2" disabled>
+                        <i class="fa-solid fa-check"></i>
+                      </button>
+                    </form>
+                    <form
+                      action="/request-leave/decline/<%=leave.user_id %>?leave_id=<%= leave.id %>"
+                      method="post"
+                    >
+                      <button class="btn btn-danger">
+                        <i class="fa-solid fa-xmark"></i>
+                      </button>
+                    </form>
+                    <% }%>
+                  </div>
+                </td>
+                <% } %> <% }) %>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,58 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="report-heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Report Reviewing
+      </p>
+
+      <div
+        class="report-review__container container-fluid bg-white rounded-3 p-3"
+      >
+        <div class="d-flex align-items-center">
+          <img
+            src="data:image/png;base64,<%= locals.imageBuffer ? imageBuffer : null %>"
+            alt=""
+            class="report__user-image rounded-circle"
+          />
+          <div class="d-block ms-3">
+            <% employees.forEach(employee => { %> <% if (employee.id ===
+            report.user_id) { %>
+            <p class="report__username mb-0 fw-bold fs-5">
+              <%= employee.fname %>
+            </p>
+            <p class="report__user-role mb-0 text-secondary fw-light">
+              <%= employee.role %>
+            </p>
+            <% } %> <% }) %>
+          </div>
+        </div>
+
+        <p class="report__title fw-bold fs-4 mt-3 mb-0">
+          <%= report.report_title %>
+        </p>
+
+        <p class="report__desc mb-0 mt-3"><%= report.report_description %></p>
+
+        <p class="report__file-name fw-bold mt-3 mb-0">
+          <%= report.report_file_name %>
+        </p>
+
+        <a
+          href="data:<%=fileType%>;base64,<%= base64File %>"
+          download="<%= report.report_file_name %>"
+          >Download file</a
+        >
+
+        <p class="report__date mb-0 mt-3 fw-bold">
+          Created on:
+          <span class="fw-light"><%= report.create_day %></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

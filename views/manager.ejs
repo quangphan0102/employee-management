@@ -1,0 +1,346 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div
+        class="user-info d-flex flex-wrap align-items-center p-2 mt-3 rounded-3 bg-light"
+      >
+        <div class="user-info__item d-flex">
+          <div class="user-image px-3">
+            <% avartars.forEach(avartar => { %> <% if (avartar.user_id ===
+            user.id) { %> <% const imageBuffer =
+            Buffer.from(avartar.image_file).toString("base64"); %>
+            <img
+              src="data:image/png;base64,<%= imageBuffer %>"
+              style="width: 125px; border-radius: 50%"
+              alt=""
+            />
+            <% } %> <% }) %>
+          </div>
+          <div class="user-desc ms-2">
+            <p class="user-name fs-3">Hi, <%= user.fname%>!</p>
+            <p class="user-slogan fs-6 fw-light">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni,
+              corrupti deleniti quos autem
+            </p>
+          </div>
+        </div>
+        <div class="user-info__item d-flex w-100 p-3">
+          <div class="user-label flex-grow-1">
+            <p class="label-department fw-light">Department:</p>
+            <p class="label-position fw-light">Position:</p>
+            <p class="label-phone fw-light">Phone number:</p>
+            <p class="label-email fw-light">Email:</p>
+          </div>
+          <div class="user-info__container flex-grow-1">
+            <p class="label-department fw-light"><%= department %></p>
+            <p class="label-position fw-light"><%= user.role %></p>
+            <p class="label-phone fw-light"><%= user.phone %></p>
+            <p class="label-email fw-light"><%= user.email %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex flex-column mt-3">
+        <div class="leaves-section p-2 rounded-3 bg-light">
+          <div class="leaves-list row gx-3">
+            <div class="leaves-item col-12">
+              <div
+                class="d-flex justify-content-around align-items-center px-3"
+              >
+                <div class="leave-condition">
+                  <div class="d-flex align-items-center py-2">
+                    <span class="leave-icon leave-icon__vacation me-3">
+                      <i class="fa-regular fa-clock"></i>
+                    </span>
+                    <p class="leave-text mb-0">Vacations</p>
+                  </div>
+                  <p class="leave-desc" style="font-size: 14px">
+                    <span class="leave__text--purple fw-bold"
+                      ><%= leaves.vacation_day %></span
+                    >
+                    days available
+                  </p>
+                </div>
+                <div class="leave-condition">
+                  <div class="d-flex align-items-center py-2">
+                    <span class="leave-icon leave-icon__sick me-3">
+                      <i class="fa-solid fa-heart-pulse"></i>
+                    </span>
+                    <p class="leave-text mb-0">Sick days</p>
+                  </div>
+                  <p class="leave-desc" style="font-size: 14px">
+                    <span class="leave__text--red fw-bold"
+                      ><%= leaves.sick_day %></span
+                    >
+                    days available
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="leave-item col-12">
+              <div class="d-flex">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary w-100 me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  Request for Time off
+                  <span
+                    class="request-leave__icon-link"
+                    style="display: block; font-size: 1.2em"
+                  >
+                    <i class="fa-solid fa-clock"></i>
+                  </span>
+                </button>
+
+                <a href="/request-leave" class="btn btn-outline-success w-100">
+                  Your Requests
+                  <span
+                    class="request-leave__icon-link"
+                    style="display: block; font-size: 1.2em"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="client bg-light mt-3 rounded-3">
+          <h3 class="fw-bold p-3 text-primary">Employees</h3>
+          <ul class="client-list list-group">
+            <% empList.forEach(emp => { %>
+            <li class="client-list__item list-group-item bg-light">
+              <div class="client-description d-flex align-items-center">
+                <% avartars.forEach(avartar => { %> <% if (avartar.user_id ===
+                emp.user_id) { %> <% const imageBuffer =
+                Buffer.from(avartar.image_file).toString("base64"); %>
+                <img
+                  src="data:image/png;base64,<%= imageBuffer %>"
+                  class="client-image rounded-circle"
+                  alt=""
+                />
+                <% } %> <% }) %>
+                <div class="d-flex flex-column ms-3">
+                  <p class="client-name fw-bold m-0"><%= emp.fname %></p>
+                  <p class="client-contact fw-light m-0">
+                    Phone: <%= emp.phone %>
+                  </p>
+                </div>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-8">
+      <div class="project-ctn mt-3 mt-md-0 mt-lg-0 rounded-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <p class="project-ctn__heading fw-bold fs-4 py-3 m-0 text-primary">
+            Active Projects
+          </p>
+          <a href="/task/create" class="btn btn-primary rounded-pill">
+            <i class="fa-solid fa-list-check pe-3"></i>Create Task</a
+          >
+        </div>
+
+        <div class="task-section row gx-3">
+          <div class="task-todo col-12 col-lg-4">
+            <div class="task-todo__container bg-white rounded-3 h-100 py-2">
+              <div class="d-flex align-items-center justify-content-between">
+                <p
+                  class="task-todo__heading fw-bold text-primary px-3 py-2 m-0 fs-4"
+                >
+                  To Do
+                </p>
+                <span class="todo__open-btn p-2 me-2" style="cursor: pointer">
+                  <i class="fa-solid fa-plus"></i>
+                </span>
+              </div>
+
+              <form
+                action="/todo/create"
+                method="post"
+                class="todo__form p-2 m-2 rounded-3 bg-body-secondary"
+              >
+                <span class="w-100 d-block text-end">
+                  <i
+                    class="todo__close-btn fa-solid fa-xmark pe-2"
+                    style="cursor: pointer"
+                  ></i>
+                </span>
+                <div class="mb-3">
+                  <label for="todo_title" class="form-label fw-bold"
+                    >Todo title:</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="todo_title"
+                    placeholder="Type your todo today..."
+                    name="todo_title"
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="todo_text" class="form-label fw-bold"
+                    >Todo text:</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="todo_text"
+                    placeholder="Type your todo today..."
+                    name="todo_text"
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  name="user_id"
+                  value="<%= user.id %>"
+                  style="display: none"
+                />
+                <button class="btn btn-primary">Submit</button>
+              </form>
+
+              <% todos.forEach((todo, index) => { %>
+              <div class="todo__card bg-body-secondary mx-2 p-2 rounded-3 mt-2">
+                <div class="d-flex align-items-center justify-content-between">
+                  <p class="todo__card-heading fw-bold text-primary mb-0">
+                    <%= todo.todo_title %>
+                  </p>
+                  <form
+                    action="/todo/delete"
+                    method="post"
+                    class="todo__delete"
+                  >
+                    <input
+                      type="text"
+                      id="del-id"
+                      name="del_id"
+                      value="<%= todo.id %>"
+                      hidden
+                    />
+                    <button
+                      class="btn btn-light rounded-circle px-2 py-1 fw-bold text-primary"
+                    >
+                      X
+                    </button>
+                  </form>
+                </div>
+                <p class="todo__card-des fw-light"><%= todo.todo_text %></p>
+                <p class="todo__card-date fw-light">
+                  <span class="fw-bold">Created:</span> <%= todo.date %>
+                </p>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+
+          <div class="project-on-progress col-12 col-lg-4">
+            <div
+              class="project-on-progress__container bg-white mt-3 mt-md-3 mt-lg-0 rounded-3"
+            >
+              <p
+                class="project-on-progress__heading fw-bold text-warning px-3 py-2 mb-0 fs-4"
+              >
+                On Progress (Projects)
+              </p>
+
+              <div class="project-on-progress__wrapper">
+                <% projects.forEach(project => { %> <% if
+                (project.project_progress === "On Progress") { %>
+                <div
+                  class="project__card bg-body-secondary mx-2 p-2 rounded-3 mt-2"
+                >
+                  <p class="project__card-heading fw-bold">
+                    <%= project.project_name %>
+                  </p>
+                  <p class="project__card-assigned fw-light">
+                    <span class="fw-bold">Assigned: </span>
+                    <%= project.year %>
+                  </p>
+                  <p
+                    class="project__progress px-2 bg-warning bg-opacity-25 text-warning rounded-3 fw-bold py-1"
+                  >
+                    <%= project.project_progress %>
+                  </p>
+                </div>
+                <% } %> <% }) %>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-done col-12 col-lg-4">
+            <div
+              class="project-done__container mt-3 mt-md-3 mt-lg-0 bg-white rounded-3"
+            >
+              <p
+                class="project-done__heading fw-bold text-success px-3 py-2 m-0 fs-4"
+              >
+                Done (Projects)
+              </p>
+
+              <div class="project-done__wrapper">
+                <% projects.forEach(project => { %> <% if
+                (project.project_progress === "Done") { %>
+                <div
+                  class="project__card bg-body-secondary mx-2 p-2 rounded-3 mt-2"
+                >
+                  <p class="project__card-heading fw-bold">
+                    <%= project.project_name %>
+                  </p>
+                  <p class="project__card-assigned fw-light">
+                    <span class="fw-bold">Assigned: </span>
+                    <%= project.year %>
+                  </p>
+                  <p
+                    class="project__progress px-2 bg-success bg-opacity-25 text-text-success rounded-3 fw-bold py-1"
+                  >
+                    <%= project.project_progress %>
+                  </p>
+                </div>
+                <% } %> <% }) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/modal-leave.ejs") %>
+
+<script>
+  const todoForm = document.querySelector(".todo__form");
+  const todoOpenBtn = document.querySelector(".todo__open-btn");
+  const todoCloseBtn = document.querySelector(".todo__close-btn");
+
+  todoOpenBtn.addEventListener("click", () => {
+    todoForm.classList.toggle("form-open");
+  });
+
+  todoCloseBtn.addEventListener("click", () => {
+    if (todoForm.classList.contains("form-open")) {
+      todoForm.classList.remove("form-open");
+    }
+  });
+
+  const reqLeaveBtn = document.querySelector(".request-leave__btn");
+
+  const leaveForm = document.querySelector(".request-leave__form");
+
+  reqLeaveBtn.addEventListener("click", () => {
+    leaveForm.submit();
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

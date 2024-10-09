@@ -1,0 +1,168 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <p class="department-form__heading fw-bold fs-4 mb-0 text-primary">
+          Department List
+        </p>
+      </div>
+
+      <div class="bg-white rounded-3">
+        <div class="department-ctn bg-white rounded-3 p-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Department name</th>
+                <th scope="col">Manager</th>
+                <th scope="col">Members</th>
+                <th scope="col">Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% departments.forEach(dep => { %>
+              <tr>
+                <td data-title="Department's name">
+                  <p class="fw-bold mb-0 mt-2 ms-2">
+                    <%= dep.department_name %>
+                  </p>
+                </td>
+                <td data-title="Department's Manager">
+                  <!-- FIX: Để hình ở đây -->
+                  <div
+                    class="department__manager-ctn d-flex align-items-center mt-0 mt-md-2 mt-lg-0"
+                  >
+                    <% avartars.forEach(avartar => { %> <% if (avartar.user_id
+                    === dep.manager_id && avartar.image_file != null) { %> <%
+                    const imageBuffer =
+                    Buffer.from(avartar.image_file).toString("base64") %>
+                    <img
+                      class="manager__image department__manager-img rounded-5 mt-0"
+                      src="data:image/png;base64, <%= imageBuffer %>"
+                      alt="manager image"
+                    />
+                    <% } %> <% }) %>
+                    <p class="manager__name ms-2 mb-0">
+                      <% depsMembers.forEach(member => { %> <%= dep.manager_id
+                      === member.member_id ? member.fname : null %> <%})%>
+                    </p>
+                  </div>
+                </td>
+                <td data-title="Members" class="tbl-data__members">
+                  <div class="department__member-list">
+                    <% let countMembers = 0; %> <% depsMembers.forEach(member =>
+                    { %> <% if (dep.id === member.department_id) {%> <%
+                    countMembers++ %> <% avartars.forEach(avartar => { %> <% if
+                    (avartar.user_id === member.member_id && avartar.image_file
+                    != null) { %> <% const imageBuffer =
+                    Buffer.from(avartar.image_file).toString("base64") %>
+                    <img
+                      class="department__user-img rounded-5"
+                      src="data:image/png;base64,<%= imageBuffer %>"
+                      alt="<%= member.fname %>"
+                    />
+                    <% } %> <% }) %> <% } })%> <% if (countMembers > 3) { %>
+                    <p class="department__user-img department__user-left">
+                      + <%= countMembers - 3 %>
+                    </p>
+                    <% } %>
+                  </div>
+                </td>
+                <td data-title="Others" class="department__btns">
+                  <a
+                    href="/departments/detail?department_id=<%= dep.id %>"
+                    class="department__view-btn btn btn-primary mt-1"
+                    >View more
+                  </a>
+                  <% if (user.role == "CEO") { %>
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#department__delete-modal"
+                    class="department__delete-btn btn btn-danger mt-1 mt-lg-0"
+                    value="<%= dep.id %>"
+                  >
+                    Delete
+                  </button>
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="department__delete-modal"
+  tabindex="-1"
+  aria-labelledby="department__delete-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="department__delete-modal">
+          Delete Department
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="department__delete-text fw-bold mb-0">
+          Are you sure want to delete this department ?
+        </p>
+        <form
+          class="department__delete-form"
+          action="/department/delete"
+          method="post"
+          class="request-leave__form"
+        >
+          <input type="text" id="department-id" name="department_id" hidden />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="request-delete__btn btn btn-danger">
+          Delete Department
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const departmentDelBtns = document.querySelectorAll(
+    ".department__delete-btn"
+  );
+  const reqDeleteBtn = document.querySelector(".request-delete__btn");
+  const departmentDeleteForm = document.querySelector(
+    ".department__delete-form"
+  );
+
+  const inputDepartmentId = document.getElementById("department-id");
+
+  departmentDelBtns.forEach(function (departmentDelBtn) {
+    departmentDelBtn.addEventListener("click", function () {
+      inputDepartmentId.value = this.value;
+    });
+  });
+
+  reqDeleteBtn.addEventListener("click", () => {
+    departmentDeleteForm.submit();
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

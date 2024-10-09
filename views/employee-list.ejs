@@ -1,0 +1,169 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-12 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <p class="employee-list__heading fw-bold fs-4 mb-0 text-primary">
+          Employee list
+        </p>
+        <% if (user.role === "ADMIN" || user.role === "CEO") { %>
+        <a href="/employees/create" class="btn btn-primary rounded-pill fs-5"
+          >+ Create Employee</a
+        >
+        <% } %>
+      </div>
+
+      <div class="bg-white rounded-3">
+        <div class="employee-ctn bg-white rounded-3 p-3">
+          <div class="employee-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">User</th>
+                  <th scope="col">Department</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Birthday</th>
+                  <th scope="col">Contact</th>
+                  <% if (user.role === "CEO") { %>
+                  <th scope="col">Others</th>
+                  <% } %>
+                </tr>
+              </thead>
+              <tbody>
+                <% employees.forEach(emp => { %>
+                <tr>
+                  <td data-title="Full name" class="employee__fullname-ctn">
+                    <div class="d-flex align-items-center">
+                      <% avartars.forEach(avarta => { %> <% if (avarta.user_id
+                      === emp.id && avarta.image_file != null) { const
+                      imageBuffer =
+                      Buffer.from(avarta.image_file).toString('base64')%>
+                      <img
+                        class="employee__list-img rounded-circle"
+                        src="data:image/png;base64,<%= imageBuffer %>"
+                        alt="employee image"
+                      />
+                      <% } %> <% }) %>
+                      <p class="fw-light mb-0 ms-2"><%= emp.fname %></p>
+                    </div>
+                  </td>
+                  <td data-title="Department">
+                    <% departments.forEach(dep => { %> <% if (dep.member_id ===
+                    emp.id) { %>
+                    <p class="employee-department fw-light mb-0 lh-base py-2">
+                      <%= dep.department_name %>
+                    </p>
+                    <% } %> <% }) %>
+                  </td>
+                  <td data-title="Role">
+                    <p class="employee-role fw-light mb-0 lh-base py-2">
+                      <%= emp.role %>
+                    </p>
+                  </td>
+                  <td data-title="Birthday">
+                    <p class="employee-join-date fw-light mb-0 lh-base py-2">
+                      <%= emp.birthdate %>
+                    </p>
+                  </td>
+                  <td data-title="Phone">
+                    <a
+                      href="tel:+"
+                      class="employee-tel fw-light mb-0 lh-base py-2 d-block text-black"
+                      ><%= emp.phone %></a
+                    >
+                  </td>
+                  <% if (user.role === "CEO" || user.role === "ADMIN") { %>
+                  <td data-title="Other">
+                    <a
+                      href="/employees/edit?id=<%= emp.id %>"
+                      class="btn btn-primary mt-1"
+                      >Edit</a
+                    >
+                    <button
+                      data-bs-toggle="modal"
+                      data-bs-target="#employee__delete-modal"
+                      class="employee__delete-btn btn btn-danger mt-1 mt-lg-0"
+                      value="<%= emp.id %>"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <% }%>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="employee__delete-modal"
+  tabindex="-1"
+  aria-labelledby="employee__delete-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="employee__delete-modal">
+          Delete Employee
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="employee__delete-text fw-bold mb-0">
+          Are you sure want to delete this employee ?
+        </p>
+        <form
+          class="employee__delete-form"
+          action="/employees/delete"
+          method="post"
+          class="request-leave__form"
+        >
+          <input type="text" id="employee-id" name="employee_id" hidden />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="request-delete__btn btn btn-danger">
+          Delete Department
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const employeeDelBtns = document.querySelectorAll(".employee__delete-btn");
+  const reqDeleteBtn = document.querySelector(".request-delete__btn");
+  const employeeDeleteForm = document.querySelector(".employee__delete-form");
+
+  const inputEmployee = document.getElementById("employee-id");
+
+  employeeDelBtns.forEach(function (employeeDelBtn) {
+    employeeDelBtn.addEventListener("click", function () {
+      inputEmployee.value = this.value;
+    });
+  });
+
+  reqDeleteBtn.addEventListener("click", () => {
+    employeeDeleteForm.submit();
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

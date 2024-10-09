@@ -1,0 +1,163 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <p class="project-form__heading fw-bold fs-4 mb-0 text-primary">
+          Project list
+        </p>
+        <a href="/projects/create" class="btn btn-primary rounded-pill fs-5"
+          >+ Create Project</a
+        >
+      </div>
+
+      <div class="bg-white rounded-3">
+        <div class="project-ctn bg-white rounded-3 p-3">
+          <div class="project-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Project name</th>
+                  <th scope="col">Members</th>
+                  <th scope="col">Progress</th>
+                  <% if (user.role === "Manager") { %>
+                  <th scope="col">Others</th>
+                  <% } %>
+                </tr>
+              </thead>
+              <tbody>
+                <% projects.forEach(project => { %>
+                <tr>
+                  <td data-title="Project name">
+                    <p class="fw-bold mb-0 ms-2"><%= project.project_name %></p>
+                  </td>
+                  <td data-title="Members" class="tbl-data__members">
+                    <div class="project__member-list">
+                      <% let countMembers = 0; members.filter(member => { %> <%
+                      if (member.id === project.id) { %> <% countMembers++; %>
+                      <% avartars.forEach(avartar => { %> <% if (member.user_id
+                      === avartar.user_id && avartar.image_file != null) { %> <%
+                      const imageBuffer =
+                      Buffer.from(avartar.image_file).toString('base64'); %>
+                      <img
+                        class="project__user-img rounded-5"
+                        src="data:image/png;base64,<%= imageBuffer %>"
+                        alt="<%= member.fname %>"
+                      />
+                      <% } %> <% })%> <% } }) %> <% if (countMembers > 3) { %>
+                      <p class="project__user-img project__user-left">
+                        +<%= countMembers - 3 %>
+                      </p>
+                      <% } %>
+                    </div>
+                  </td>
+                  <td class="content-none">
+                    <% if (project.project_progress !== "Done") { %>
+                    <p
+                      class="project-progress__text p-2 fw-bold text-white rounded-3 w-md-50 w-auto text-center mt-1 mb-0 bg-warning bg-opacity-75"
+                    >
+                      <%= project.project_progress %>
+                    </p>
+                    <% } else { %>
+                    <p
+                      class="project-progress__text p-2 fw-bold text-white rounded-3 w-md-50 w-auto text-center mt-1 mb-0 bg-success bg-opacity-75"
+                    >
+                      <%= project.project_progress %>
+                    </p>
+                    <% } %>
+                  </td>
+                  <% if (user.role === "Manager" || user.role === "CEO" ||
+                  user.role === "ADMIN") { %>
+                  <td data-title="Others">
+                    <a
+                      href="/projects/config?id=<%= project.id %>"
+                      class="project__edit-btn btn btn-primary mt-1"
+                      >Edit
+                    </a>
+                    <button
+                      data-bs-toggle="modal"
+                      data-bs-target="#project__delete-modal"
+                      class="project__delete-btn btn btn-danger mt-1 mt-lg-0"
+                      value="<%= project.id %>"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                  <% } %>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="project__delete-modal"
+  tabindex="-1"
+  aria-labelledby="project__delete-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="project__delete-modal">
+          Delete Project
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="department__delete-text fw-bold mb-0">
+          Are you sure want to delete this project?
+        </p>
+        <form
+          class="project__delete-form"
+          action="/projects/delete"
+          method="post"
+          class="request-leave__form"
+        >
+          <input type="text" id="project-id" name="project_id" hidden />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="request-delete__btn btn btn-danger">
+          Delete Project
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const projectDelBtns = document.querySelectorAll(".project__delete-btn");
+  const reqDeleteBtn = document.querySelector(".request-delete__btn");
+  const projectDeleteForm = document.querySelector(".project__delete-form");
+
+  const inputProjectId = document.getElementById("project-id");
+
+  projectDelBtns.forEach(function (projectDelBtn) {
+    projectDelBtn.addEventListener("click", function () {
+      inputProjectId.value = this.value;
+    });
+  });
+
+  reqDeleteBtn.addEventListener("click", () => {
+    projectDeleteForm.submit();
+  });
+</script>
+<%- include("partials/footer.ejs") %>

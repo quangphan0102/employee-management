@@ -1,0 +1,77 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="project-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Report List
+      </p>
+
+      <div class="bg-white rounded-3">
+        <div class="employee-ctn bg-white rounded-3 p-3">
+          <div class="employee-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">From</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Functions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% reports.forEach(report => { %>
+                <tr>
+                  <td data-title="Report's title">
+                    <p class="report__title-text fw-bold">
+                      <%= report.report_title %>
+                    </p>
+                  </td>
+                  <td data-title="Report's description:">
+                    <p class="report__desc-text fw-bold">
+                      <%= report.report_description %>
+                    </p>
+                  </td>
+                  <td data-title="From:">
+                    <% avartars.forEach(avarta => { %> <% const buffer64Avartar
+                    = Buffer.from(avarta.image_file).toString("base64"); %> <%
+                    if (avarta.user_id === report.user_id) { %>
+                    <img
+                      src="data:image/png;base64,<%= buffer64Avartar%>"
+                      alt=""
+                      class="employee__list-img rounded-circle"
+                    />
+                    <% } %> <% }) %>
+                  </td>
+                  <td data-title="Created on:">
+                    <p class="report__date-text fw-bold">
+                      <%= report.create_day %>
+                    </p>
+                  </td>
+                  <td data-title="Others">
+                    <a
+                      href="/reports/view?reportId=<%= report.id %>"
+                      class="btn btn-primary ms-2"
+                      >View
+                    </a>
+                    <a
+                      href="/reports/delete?reportId=<%= report.id %>"
+                      class="employee__delete-btn btn btn-danger mt-1 mt-lg-0"
+                    >
+                      Delete
+                    </a>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

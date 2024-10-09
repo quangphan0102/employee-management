@@ -1,0 +1,69 @@
+<div class="d-none d-md-block d-lg-block col-12 col-md-3 col-lg-3">
+  <nav class="navbar mt-3 bg-light rounded-3">
+    <ul class="navbar-nav p-3 flex-grow-1">
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/dashboard">
+          <span class="pe-3">
+            <i class="fa-solid fa-house"></i>
+          </span>
+          Dashboard
+        </a>
+      </li>
+      <% if (user.role != 'CEO' || user.role != "ADMIN") { %>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/tasks">
+          <span class="pe-3">
+            <i class="fa-solid fa-list-check"></i>
+          </span>
+          Tasks
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/reports">
+          <span class="pe-3">
+            <i class="fa-solid fa-check-to-slot"></i>
+          </span>
+          Reports
+        </a>
+      </li>
+      <% } %> <% if (user.role == 'CEO' || user.role == 'Manager' || user.role
+      === "ADMIN") { %>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/departments">
+          <span class="pe-3">
+            <i class="fa-solid fa-building"></i>
+          </span>
+          Departments
+        </a>
+      </li>
+      <% } %>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/projects">
+          <span class="pe-3">
+            <i class="fa-solid fa-briefcase text-primary"></i>
+          </span>
+          Projects
+        </a>
+      </li>
+      <% if (user.role === "CEO" || user.role === "Manager" || user.role ===
+      "ADMIN") { %>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/employees">
+          <span class="pe-3">
+            <i class="fa-solid fa-users"></i>
+          </span>
+          Employees
+        </a>
+      </li>
+      <% } %>
+      <li class="nav-item">
+        <a class="nav-link fw-bold fs-6 text-primary" href="/details">
+          <span class="pe-3">
+            <i class="fa-solid fa-user-pen"></i>
+          </span>
+          Acount details
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

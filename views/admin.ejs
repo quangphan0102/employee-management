@@ -1,0 +1,272 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div
+        class="user-info d-flex align-items-center p-2 mt-3 rounded-3 bg-light"
+      >
+        <div class="user-image px-3">
+          <% avartars.forEach(avartar => { %> <% if (avartar.user_id ===
+          user.id) { %> <% const imageBuffer =
+          Buffer.from(avartar.image_file).toString("base64"); %>
+          <img
+            src="data:image/png;base64, <%= imageBuffer %>"
+            style="width: 125px; border-radius: 50%"
+            alt=""
+          />
+          <% } %> <% }) %>
+        </div>
+        <div class="user-desc ms-2">
+          <p class="user-name fs-3">Hi, <%= user.fname %></p>
+          <p class="user-slogan fs-6 fw-light">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni,
+            corrupti deleniti quos autem
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-8">
+      <div class="row gx-3 h-100">
+        <div class="project-section mt-3 col-12 col-md-6 col-lg-4">
+          <div class="project-card bg-light rounded-3 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="project-title mb-0 fs-5 fw-bold text-success">
+                Projects
+              </p>
+              <span class="project-icon">
+                <i class="fa-solid fa-briefcase text-success"></i>
+              </span>
+            </div>
+            <p class="project-count fs-3 fw-bold text-success">
+              <%= projects.length %>
+            </p>
+            <a
+              href="/projects"
+              class="d-block link-underline link-underline-opacity-0 fw-bold fs-6 w-100 text-end"
+              >Project details</a
+            >
+          </div>
+        </div>
+
+        <div class="emp-section mt-3 col-12 col-md-6 col-lg-4">
+          <div class="emp-card bg-light rounded-3 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="emp-title mb-0 fs-5 fw-bold text-primary">Employees</p>
+              <span class="emp-icon text-primary">
+                <i class="fa-solid fa-address-card"></i>
+              </span>
+            </div>
+            <p class="emp-count fs-3 fw-bold text-primary">
+              <%= employees.length %>
+            </p>
+            <a
+              href="/employees"
+              class="d-block link-underline link-underline-opacity-0 fw-bold fs-6 w-100 text-end"
+              >Employee details</a
+            >
+          </div>
+        </div>
+
+        <div class="department-section mt-3 col-12 col-md-6 col-lg-4">
+          <div class="department-card bg-light rounded-3 p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="department-title mb-0 fs-5 fw-bold text-warning">
+                Departments
+              </p>
+              <span class="department-icon text-warning">
+                <i class="fa-solid fa-building"></i>
+              </span>
+            </div>
+            <p class="department-count fs-3 fw-bold text-warning">
+              <%= departments.length %>
+            </p>
+            <a
+              href="/departments"
+              class="d-block link-underline link-underline-opacity-0 fw-bold fs-6 w-100 text-end"
+              >Department details</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row gx-3 mt-3">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="d-flex flex-column">
+        <div class="leaves-section p-2 rounded-3 bg-light">
+          <div class="leaves-list row gx-3">
+            <div class="leaves-item col-12">
+              <div
+                class="d-flex justify-content-around align-items-center px-3"
+              >
+                <div class="leave-condition">
+                  <div class="d-flex align-items-center py-2">
+                    <span class="leave-icon leave-icon__vacation me-3">
+                      <i class="fa-regular fa-clock"></i>
+                    </span>
+                    <p class="leave-text mb-0">Vacations</p>
+                  </div>
+                  <p class="leave-desc" style="font-size: 14px">
+                    <span class="leave__text--purple fw-bold"
+                      ><%= leaves.vacation_day %></span
+                    >
+                    days available
+                  </p>
+                </div>
+                <div class="leave-condition">
+                  <div class="d-flex align-items-center py-2">
+                    <span class="leave-icon leave-icon__sick me-3">
+                      <i class="fa-solid fa-heart-pulse"></i>
+                    </span>
+                    <p class="leave-text mb-0">Sick days</p>
+                  </div>
+                  <p class="leave-desc" style="font-size: 14px">
+                    <span class="leave__text--red fw-bold"
+                      ><%= leaves.sick_day %></span
+                    >
+                    days available
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="leave-item col-12">
+              <div class="d-flex">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary w-100 me-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  Request for Time off
+                  <span
+                    class="request-leave__icon-link"
+                    style="display: block; font-size: 1.2em"
+                  >
+                    <i class="fa-solid fa-clock"></i>
+                  </span>
+                </button>
+
+                <a href="/request-leave" class="btn btn-outline-success w-100">
+                  Your Requests
+                  <span
+                    class="request-leave__icon-link"
+                    style="display: block; font-size: 1.2em"
+                  >
+                    <i class="fa-solid fa-eye"></i>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="client bg-light mt-3 rounded-3">
+          <h3 class="fw-bold p-3 text-primary">Client contacts</h3>
+          <ul class="client-list list-group">
+            <% clients.forEach(client => { %>
+            <li class="client-list__item list-group-item bg-light">
+              <div class="client-description d-flex align-items-center">
+                <div class="d-flex flex-column ms-3">
+                  <p class="client-name fw-bold m-0">
+                    <%= client.client_name %>
+                  </p>
+                  <p class="client-contact fw-light m-0">
+                    Phone: <%= client.client_phone %>
+                  </p>
+                </div>
+              </div>
+            </li>
+            <% })%>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-8">
+      <div class="project-ctn bg-white rounded-3 my-3 mt-md-0 mt-lg-0 p-3">
+        <p class="project-ctn__heading fw-bold fs-3 text-primary">
+          Active Projects
+        </p>
+        <hr />
+        <div class="project-dashboard__table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Project name</th>
+                <th scope="col">Members</th>
+                <th scope="col">Progress</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% projects.forEach(project => { %>
+              <tr>
+                <td class="content-none">
+                  <div class="d-flex align-items-center">
+                    <img
+                      class="project__list-img"
+                      src="/images/logo.jpg"
+                      alt="project image"
+                    />
+                    <p class="fw-bold mb-0 ms-2"><%= project.project_name %></p>
+                  </div>
+                </td>
+                <td class="content-none">
+                  <div class="project__member-list">
+                    <% let i = 0; members.forEach((member, index) => { %> <% if
+                    (project.id === member.id) { %> <% i++ %> <%
+                    avartars.forEach(avartar => { %> <% if (avartar.user_id ===
+                    member.user_id && avartar.image_file != null ) { %> <% const
+                    imageBuffer =
+                    Buffer.from(avartar.image_file).toString("base64") %>
+                    <img
+                      class="project__user-img rounded-5"
+                      src="data:image/png;base64,<%= imageBuffer %>"
+                      alt="project image"
+                    />
+                    <% } %> <% }) %> <% } %> <% }) %> <% if (i > 3) { %>
+                    <p class="project__user-img project__user-left">
+                      +<%= i - 3 %>
+                    </p>
+                    <% } %>
+                  </div>
+                </td>
+                <td class="content-none">
+                  <% if (project.project_progress === "On Progress") { %>
+                  <p
+                    class="project-progress__text bg-warning p-2 fw-bold text-white rounded-3 w-md-50 w-auto text-center mt-1 mb-0"
+                  >
+                    <%= project.project_progress %>
+                  </p>
+                  <% } else { %>
+                  <p
+                    class="project-progress__text bg-success p-2 fw-bold text-white rounded-3 w-md-50 w-auto text-center mt-1 mb-0"
+                  >
+                    <%= project.project_progress %>
+                  </p>
+                  <% } %>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/modal-leave.ejs") %>
+<script>
+  const reqLeaveBtn = document.querySelector(".request-leave__btn");
+
+  const leaveForm = document.querySelector(".request-leave__form");
+
+  reqLeaveBtn.addEventListener("click", () => {
+    leaveForm.submit();
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

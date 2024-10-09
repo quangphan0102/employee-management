@@ -1,0 +1,207 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="project-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        <%= locals.project ? "Editing Project" : "Creating Project" %>
+      </p>
+
+      <form
+        class="project_form rounded-3 bg-white p-3"
+        action="<%= postAction == "/projects/edit" ? "/projects/edit?id=" + project.id : null %>"
+        method="post"
+      >
+        <div class="mb-3">
+          <label for="project-name" class="form-label fw-bold"
+            >Project name:</label
+          >
+          <input
+            type="type"
+            class="form-control"
+            id="project-name"
+            name="project_name"
+            placeholder="Type a name for project, Ex: Project 1..."
+            value="<%= locals.project ? project.project_name: null %>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="members" class="form-label fw-bold"
+            >Members in project:</label
+          >
+          <div
+            id="member-list"
+            class="d-flex flex-wrap border border-secondary-subtle rounded-2"
+          >
+            <% if (locals.projMembers) { %> <% projMembers.forEach(member => {
+            %>
+            <label
+              class="member-item p-2 m-1 bg-body-secondary rounded-3"
+              for=""
+            >
+              <%= member.fname %>
+            </label>
+            <input
+              type="text"
+              class="member-input d-none"
+              name="members"
+              value="<%= member.fname %>"
+            />
+            <% }) %> <% } %>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="members" class="form-label fw-bold"
+            >Members in project:</label
+          >
+          <div
+            class="original-members d-flex flex-wrap border border-secondary-subtle rounded-2"
+          >
+            <% depsMembers.forEach(member => { %>
+            <span
+              class="member-name p-2 m-1 bg-body-secondary rounded-3"
+              style="cursor: pointer"
+              ><%= member.fname %></span
+            >
+            <% }) %>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="budget" class="form-label fw-bold">Budget:</label>
+          <input type="type" class="form-control" id="budget" name="budget"
+          placeholder="Adding budget of this project..." value="<%=
+          locals.project ? project.project_budget : null %>" <%= locals.project
+          ? "disabled" : null %> />
+        </div>
+        <% if (locals.project) { %>
+        <div class="mb-3">
+          <label for="overview" class="form-label fw-bold">Overview:</label>
+          <input
+            type="type"
+            class="form-control"
+            id="overview"
+            name="overview"
+            value="<%=
+          locals.project ? project.project_overview : null %>"
+          />
+        </div>
+        <% } %>
+        <div class="mb-3">
+          <label for="ovreview" class="form-label fw-bold">Progress:</label>
+          <select name="project_progress" class="form-select" id="project_progress" <%= locals.project ? null : "disabled" %> >
+            <option value="On Progress">On Progress</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="client_name" class="form-label fw-bold"
+            >Client's Name:</label
+          >
+          <input type="text" class="form-control" id="client_name"
+          name="client_name" value="<%= locals.clientInfo ?
+          clientInfo.client_name : null %>" <%= locals.clientInfo ? "disabled" :
+          null %> />
+        </div>
+        <div class="mb-3">
+          <label for="client_email" class="form-label fw-bold"
+            >Client's Email:</label
+          >
+          <input type="email" class="form-control" id="client_email"
+          name="client_email" value="<%= locals.clientInfo ?
+          clientInfo.client_email : null %>" <%= locals.clientInfo ? "disabled"
+          : null %> />
+        </div>
+        <div class="mb-3">
+          <label for="client_phone" class="form-label fw-bold"
+            >Client's Phone:</label
+          >
+          <input type="tel" class="form-control" id="client_phone"
+          name="client_phone" value="<%= locals.clientInfo ?
+          clientInfo.client_phone : null %>" <%= locals.clientInfo ? "disabled"
+          : null %> />
+        </div>
+        <button class="btn btn-primary fw-bold mt-3" type="submit">
+          <%= locals.project ? "Edit" : "Create" %>
+        </button>
+        <a href="/projects" class="btn btn-secondary mt-3">Go Back</a>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const members = document.querySelectorAll(".member-name");
+  const memberList = document.getElementById("member-list");
+
+  const currentMembers = memberList.children;
+
+  //Checking the current members is already join the project:
+  for (let currentMem of currentMembers) {
+    members.forEach((member) => {
+      if (currentMem.innerText === member.innerText) {
+        member.hidden = true;
+      }
+    });
+  }
+
+  members.forEach((member, index) => {
+    member.onclick = function () {
+      //Hidden the span when user click a new user:
+      this.hidden = true;
+
+      //Create a new member-item
+      const memberLabel = document.createElement("label");
+      const memberClassName = [
+        "member-item",
+        "p-2",
+        "m-1",
+        "bg-body-secondary",
+        "rounded-3",
+      ];
+      memberLabel.classList.add(...memberClassName);
+      memberLabel.innerText = this.innerHTML;
+
+      //Create the input element:
+      const memberInput = document.createElement("input");
+      memberInput.classList.add("member-input");
+      memberInput.classList.add("d-none");
+      memberInput.type = "text";
+      memberInput.name = "members";
+      memberInput.value = this.innerHTML;
+
+      memberList.appendChild(memberLabel);
+      memberList.appendChild(memberInput);
+
+      //Get all delete-btn:
+      const memberDelBtns = document.querySelectorAll(".member-item");
+
+      //Loop through and find the index to excute remove element
+      memberDelBtns.forEach((delBtn, index) => {
+        delBtn.onclick = () => {
+          const originalMembers =
+            document.querySelector(".original-members").children;
+
+          for (let originalMember of originalMembers) {
+            if (originalMember.innerText === delBtn.innerText)
+              originalMember.hidden = false;
+          }
+
+          const memberInputs = document.querySelectorAll(".member-input");
+
+          //Removing the input element
+          for (let memberInput of memberInputs) {
+            if (delBtn.innerText == memberInput.value) {
+              memberList.removeChild(memberInput);
+            }
+          }
+
+          //Removing the label:
+          memberList.removeChild(delBtn);
+        };
+      });
+    };
+  });
+</script>
+<%- include("partials/footer.ejs") %>

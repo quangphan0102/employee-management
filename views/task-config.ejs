@@ -1,0 +1,82 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="employee-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Task Creating
+      </p>
+
+      <form
+        class="employee_form rounded-3 bg-white p-3"
+        action="/task/create"
+        method="post"
+      >
+        <div class="mb-3">
+          <label for="task_title" class="form-label fw-bold">Task title:</label>
+          <input
+            type="type"
+            class="form-control"
+            id="task_title"
+            name="task_title"
+            placeholder="Naming for task title Ex: Task something..."
+          />
+        </div>
+        <div class="mb-3">
+          <label for="task_description" class="form-label fw-bold"
+            >Task description</label
+          >
+          <textarea
+            class="form-control"
+            name="task_description"
+            id="task_description"
+          ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="from_user" class="form-label fw-bold"
+            >From: <span class="fw-light ms-3"><%= user.fname%></span></label
+          >
+          <input
+            type="text"
+            class="form-control d-none"
+            id="from_user"
+            name="from_user"
+            value="<%= user.id %>"
+          />
+          <input
+            type="text"
+            class="form-control d-none"
+            id="department_id"
+            name="department_id"
+            value="<%= departmentId %>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="to-user" class="form-label fw-bold">To:</label>
+          <select name="to_user" id="to-user" class="form-select">
+            <% empList.forEach(emp => { %> <% if (!(emp.fname === user.fname))
+            {%>
+            <option value="<%= emp.user_id %>"><%= emp.fname %></option>
+            <%}%> <% }) %>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="task_priority" class="form-label fw-bold"
+            >Priority:
+          </label>
+          <select name="task_priority" id="task_priority" class="form-select">
+            <option value="Normal">Normal</option>
+            <option value="Immediately">Immediately</option>
+            <option value="High">High</option>
+          </select>
+        </div>
+        <button class="btn btn-primary fw-bold mt-3" type="submit">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

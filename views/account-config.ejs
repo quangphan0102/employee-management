@@ -1,0 +1,162 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <div class="col-12 col-md-3 col-lg-3">
+      <nav class="navbar mt-3 bg-light rounded-3">
+        <ul class="navbar-nav p-3 flex-grow-1">
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/dashboard">
+              <span class="pe-3">
+                <i class="fa-solid fa-house"></i>
+              </span>
+              Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/task">
+              <span class="pe-3">
+                <i class="fa-solid fa-check-to-slot"></i>
+              </span>
+              Tasks
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/departments">
+              <span class="pe-3">
+                <i class="fa-solid fa-building"></i>
+              </span>
+              Departments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/projects">
+              <span class="pe-3">
+                <i class="fa-solid fa-briefcase text-primary"></i>
+              </span>
+              Projects
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/employees">
+              <span class="pe-3">
+                <i class="fa-solid fa-users"></i>
+              </span>
+              Employees
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold fs-6 text-primary" href="/details">
+              <span class="pe-3">
+                <i class="fa-solid fa-user-pen"></i>
+              </span>
+              Acount details
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="project-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Account details
+      </p>
+
+      <form class="project_form rounded-3 bg-white p-3" action="">
+        <div class="mb-3">
+          <label for="fname" class="form-label fw-bold">Full name:</label>
+          <input
+            type="type"
+            class="form-control"
+            id="fname"
+            name="fname"
+            placeholder="Type your name..."
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label fw-bold">Username:</label>
+          <input
+            type="type"
+            class="form-control"
+            id="username"
+            name="username"
+            placeholder="Type your name..."
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label fw-bold d-block"
+            >Password:</label
+          >
+          <div class="d-flex align-items-center">
+            <input
+              type="password"
+              class="form-control d-inline-block w-75"
+              id="password"
+              name="password"
+              placeholder="Type your password..."
+            />
+            <button
+              class="change-password btn btn-light text-black border ms-2 w-25 fw-bold"
+            >
+              Change password
+            </button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="department" class="form-label fw-bold">Department:</label>
+          <input
+            type="type"
+            class="form-control"
+            id="department"
+            name="department"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="role" class="form-label fw-bold">Role:</label>
+          <input
+            type="text"
+            name="role"
+            id="role"
+            class="form-control"
+            disabled
+          />
+        </div>
+        <div class="mb-3">
+          <label for="birthday" class="form-label fw-bold">Birthday:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="birthday"
+            name="birthday"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="user-email" class="form-label fw-bold">Email:</label>
+          <input
+            type="Email"
+            class="form-control"
+            id="user-email"
+            name="user-email"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="phone-number" class="form-label fw-bold"
+            >Phone number:</label
+          >
+          <input
+            type="tel"
+            class="form-control"
+            id="phone-number"
+            name="phone-number"
+          />
+        </div>
+        <button class="btn btn-primary fw-bold mt-3" type="submit">
+          Create
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

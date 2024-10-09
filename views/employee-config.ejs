@@ -1,0 +1,173 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="employee-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        <%= heading %>
+      </p>
+
+      <form
+        class="employee_form rounded-3 bg-white p-3"
+        action="<%= actionRoute == '/employees/edit' ? actionRoute + '?id=' + emp.id : '/employees/create' %>"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <% if (locals.errorMessage) { %>
+        <p class="fw-bold text-danger"><%= errorMessage %></p>
+        <% } %>
+        <div class="mb-3">
+          <label for="fullname" class="form-label fw-bold">Full Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="fullname"
+            name="fname"
+            placeholder="Type a name for employee, Ex: employee 1..."
+            value="<%= locals.emp ? emp.fname : null %>"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="birthday" class="form-label fw-bold">Birth day:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="birthday"
+            name="birthday"
+            value="<%= locals.emp ? emp.birthdate : null %>"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label fw-bold">Email:</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            placeholder="Type a email of employee, Ex: emp@somemail.com..."
+            value="<%= locals.emp ? emp.email : null %>"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label fw-bold">Phone numbers:</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phone"
+            name="phone"
+            placeholder="Type a phone numbers of employee, Ex: 0483 333 495..."
+            value="<%= locals.emp ? emp.phone : null %>"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label fw-bold">Username:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            placeholder="Ex: username1..."
+            value="<%= locals.emp ? emp.username : null %>"
+          />
+        </div>
+        <% if (actionRoute == '/employees/create') { %>
+        <div class="mb-3">
+          <label for="password" class="form-label fw-bold">Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            placeholder="Enter password..."
+          />
+        </div>
+        <div class="mb-3">
+          <label for="re-password" class="form-label fw-bold"
+            >Re-Password:</label
+          >
+          <input
+            type="password"
+            class="form-control"
+            id="re-password"
+            name="repassword"
+            placeholder="Re-password..."
+            required
+          />
+          <p class="repassword__msg text-danger" style="font-size: 14px"></p>
+        </div>
+        <% } %>
+        <% if (locals.emp) { %>
+          <div class="mb-3">
+            <label for="department" class="form-label fw-bold">Department:</label>
+            <select id="department" name="department" class="form-select" <%= actionRoute === '/employees/edit' ? null : 'disabled' %> >
+              <% if (locals.departments) { %>
+                <% departments.forEach(dep => { %>
+                  <option value="<%= dep.id %>"><%= dep.department_name %></option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="role" class="form-label fw-bold">Role:</label>
+            <input
+              type="input"
+              class="form-control"
+              id="role"
+              name="role"
+              value="<%= locals.emp ? emp.role : null %>"
+              <%= actionRoute === '/employees/edit' ? null : 'disabled' %>
+            />
+          </div>
+        <% } %>
+        <div class="mb-3">
+          <label for="user-image" class="form-label fw-bold">User image:</label>
+          <input
+            type="file"
+            class="form-control"
+            id="user-image"
+            name="user_image"
+          />
+        </div>
+        <button
+          class="employee__create-btn btn btn-primary fw-bold mt-3"
+          type="submit"
+        >
+          <%= actionRoute === '/employees/edit' ? "Edit" : "Create" %>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const createEmpBtn = document.querySelector(".employee__create-btn");
+  const passwordInput = document.getElementById("password");
+  const repasswordInput = document.getElementById("re-password");
+  const messageBox = document.querySelector(".repassword__msg");
+
+  createEmpBtn.addEventListener("click", (e) => {
+    const empForm = document.querySelector(".employee_form");
+
+    if (
+      passwordInput.value !== repasswordInput.value ||
+      passwordInput.value == ""
+    ) {
+      e.preventDefault();
+      messageBox.innerHTML =
+        "Your re-password is not match the previous password!";
+    } else {
+      empForm.submit();
+    }
+  });
+
+  repasswordInput.addEventListener("click", () => {
+    messageBox.innerHTML = null;
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>

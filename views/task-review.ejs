@@ -1,0 +1,62 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <p class="employee-form__heading fw-bold fs-4 py-3 mb-0 text-primary">
+        Task Reviewing
+      </p>
+
+      <div
+        class="task-review__container container-fluid bg-white rounded-3 p-3"
+      >
+        <div class="d-flex align-items-center">
+          <img
+            src="data:image/png;base64,<%= avartar %>"
+            alt=""
+            class="task__user-image rounded-circle"
+          />
+          <div class="d-block ms-3">
+            <p class="task__username mb-0 fw-bold fs-5">
+              <%= task.from_user %>
+            </p>
+            <p class="task__user-role mb-0 text-secondary fw-light">
+              <%= task.role %>
+            </p>
+          </div>
+        </div>
+
+        <p class="task__title fw-bold fs-4 mt-3 mb-0"><%= task.task_title %></p>
+
+        <p class="task__desc mb-0 mt-3"><%= task.task_description %></p>
+
+        <p class="task__priority fw-bold mt-3 mb-0">
+          Priority: <% if (task.task_priority === 'High') { %>
+          <span
+            class="task__priority-span bg-danger fw-bold p-2 rounded-3 text-white text-center bg-opacity-75 d-inline-block w-25 ms-2"
+            ><%= task.task_priority %>
+          </span>
+          <% } else if (task.task_priority === 'Immediately') { %>
+          <span
+            class="task__priority-span bg-warning fw-bold p-2 rounded-3 text-white text-center bg-opacity-75 d-inline-block w-25 ms-2"
+            ><%= task.task_priority %>
+          </span>
+          <% } else { %>
+          <span
+            class="task__priority-span bg-primary fw-bold p-2 rounded-3 text-white text-center bg-opacity-75 d-inline-block w-25 ms-2"
+            ><%= task.task_priority %>
+          </span>
+          <% } %>
+        </p>
+
+        <p class="task__date mb-0 mt-3 fw-bold">
+          Created on:
+          <span class="fw-light"><%= task.task_create %></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("partials/footer.ejs") %>

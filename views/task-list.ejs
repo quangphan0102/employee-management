@@ -1,0 +1,180 @@
+<%- include("partials/header.ejs") %>
+
+<div class="app container-fluid">
+  <div class="row gx-3">
+    <%- include("partials/aside.ejs") %>
+
+    <div class="col-12 col-md-9 col-lg-9">
+      <div class="d-flex align-items-center justify-content-between py-3">
+        <p class="task-form__heading fw-bold fs-4 mb-0 text-primary">
+          Task list
+        </p>
+        <% if(user.role === "ADMIN" || user.role === "CEO" || user.role ===
+        'Manager') { %>
+        <a href="/task/create" class="btn btn-primary rounded-pill fs-5"
+          >+ Create Task
+        </a>
+        <% } %>
+      </div>
+
+      <div class="bg-white rounded-3">
+        <div class="task-ctn bg-white rounded-3 p-3">
+          <div class="task-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="task__tbl-heading" scope="col">Task title</th>
+                  <th class="task__tbl-heading display-none" scope="col">
+                    Task description
+                  </th>
+                  <th class="task__tbl-heading" scope="col">From</th>
+                  <th class="task__tbl-heading" scope="col">To</th>
+                  <th class="task__tbl-heading" scope="col">Date</th>
+                  <th class="task__tbl-heading" scope="col">Receive</th>
+                  <th class="task__tbl-heading" scope="col">Others</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% tasks.forEach(task => { %>
+                <tr>
+                  <td data-title="Task's title">
+                    <p class="task-title fw-bold mb-0 mt-2">
+                      <%=(task.task_title).substring(0, 25) + "..."%>
+                    </p>
+                  </td>
+                  <td class="display-none" data-title="Task's description">
+                    <p class="task-description mb-0 mt-2">
+                      <%= (task.task_description).substring(0, 30)+ "..." %>
+                    </p>
+                  </td>
+                  <td data-title="From">
+                    <% avartars.forEach(avartar => { %> <% if (task.from_user_id
+                    === avartar.user_id && avartar.image_file != null) { %> <%
+                    const imageBuffer =
+                    Buffer.from(avartar.image_file).toString("base64") %>
+                    <img
+                      src="data:image/png;base64,<%= imageBuffer %>"
+                      alt="<%= task.from_user %>"
+                      class="task__user-img-from rounded-circle"
+                    />
+                    <% } %> <% }) %>
+                  </td>
+                  <td data-title="To">
+                    <% avartars.forEach(avartar => { %> <% if (task.to_user_id
+                    === avartar.user_id && avartar.image_file != null) { %> <%
+                    const imageBuffer =
+                    Buffer.from(avartar.image_file).toString("base64") %>
+                    <img
+                      src="data:image/png;base64,<%= imageBuffer %>"
+                      alt="<%= task.from_user %>"
+                      class="task__user-img-from rounded-circle"
+                    />
+                    <% } %> <% }) %>
+                  </td>
+                  <td data-title="Created date"><%= task.task_create %></td>
+                  <td class="content-none">
+                    <% if (task.user_read) { %>
+                    <p
+                      class="task-receive mb-0 bg-success p-2 rounded-3 text-center text-white fw-bold"
+                    >
+                      Seen
+                    </p>
+                    <% } else { %>
+                    <p
+                      class="task-receive mb-0 bg-warning p-2 rounded-3 text-center text-white fw-bold"
+                    >
+                      Unread
+                    </p>
+                    <% } %>
+                  </td>
+                  <td data-title="Others">
+                    <% if (user.role === "Manager") { %>
+                    <button
+                      data-bs-toggle="modal"
+                      data-bs-target="#task__delete-modal"
+                      class="task__delete-btn btn btn-danger mt-1 mt-lg-0"
+                      value="<%= task.id %>"
+                    >
+                      Delete
+                    </button>
+                    <% } else { %>
+                    <a
+                      href="/task/view?id=<%= task.id %>"
+                      class="view-task btn btn-primary fw-bold text-white"
+                      >View</a
+                    >
+                    <%}%>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="task__delete-modal"
+  tabindex="-1"
+  aria-labelledby="task__delete-modal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="task__delete-modal">Delete task</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p class="task__delete-text fw-bold mb-0">
+          Do you to delete this task ?
+        </p>
+        <form
+          class="task__delete-form"
+          action="/task/delete"
+          method="post"
+          class="request-leave__form"
+        >
+          <input type="text" id="task-id" name="task_id" hidden />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="request-delete__btn btn btn-danger">
+          Delete task
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const taskDelBtns = document.querySelectorAll(".task__delete-btn");
+  const reqDeleteBtn = document.querySelector(".request-delete__btn");
+  const taskDeleteForm = document.querySelector(".task__delete-form");
+
+  const inputTaskId = document.getElementById("task-id");
+
+  taskDelBtns.forEach(function (taskDelBtn) {
+    taskDelBtn.addEventListener("click", function () {
+      inputTaskId.value = this.value;
+    });
+  });
+
+  reqDeleteBtn.addEventListener("click", () => {
+    taskDeleteForm.submit();
+  });
+</script>
+
+<%- include("partials/footer.ejs") %>
